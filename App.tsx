@@ -22,7 +22,7 @@ i18n.load({
 	en: enMessages,
 	fr: frMessages,
 });
-i18n.activate("fr");
+i18n.activate("en");
 
 function App() {
 	const isDarkMode = useColorScheme() === 'dark';

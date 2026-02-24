@@ -95,12 +95,14 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 20,
 		fontWeight: 600,
+		color: "#FFF"
 	},
 	input: {
 		height: 40,
 		margin: 12,
 		borderWidth: 1,
 		padding: 10,
+		color: "#FFF",
 	},
 	LoginRegisterBtn: {
 		display: "flex",
