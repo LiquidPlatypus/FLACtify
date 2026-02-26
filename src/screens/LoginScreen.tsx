@@ -51,6 +51,8 @@ export default function LoginScreen() {
 						onChangeText={setLoginPassword}
 						value={loginPassword}
 					/>
+
+					<Button title={t`Login`}/>
 				</View>
 			) : (
 				<View>
@@ -78,10 +80,10 @@ export default function LoginScreen() {
 						onChangeText={setRegisterPasswordConfirm}
 						value={registerPasswordConfirm}
 					/>
+
+					<Button title={t`Register`}/>
 				</View>
 			)}
-
-			<Button title="Submit" />
 		</View>
 	);
 };

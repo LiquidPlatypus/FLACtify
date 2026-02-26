@@ -13,28 +13,30 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/screens/LoginScreen.tsx:77
+#: src/screens/LoginScreen.tsx:79
 msgid "Confirm Password"
 msgstr "Confirmer Mot de passe"
 
-#: src/screens/LoginScreen.tsx:65
+#: src/screens/LoginScreen.tsx:67
 msgid "Email"
 msgstr "mail"
 
 #: src/screens/LoginScreen.tsx:27
+#: src/screens/LoginScreen.tsx:55
 msgid "Login"
 msgstr "Connexion"
 
 #: src/screens/LoginScreen.tsx:50
-#: src/screens/LoginScreen.tsx:71
+#: src/screens/LoginScreen.tsx:73
 msgid "Password"
 msgstr "Mot de passe"
 
 #: src/screens/LoginScreen.tsx:33
+#: src/screens/LoginScreen.tsx:84
 msgid "Register"
 msgstr "Inscription"
 
 #: src/screens/LoginScreen.tsx:44
-#: src/screens/LoginScreen.tsx:59
+#: src/screens/LoginScreen.tsx:61
 msgid "Username"
 msgstr "Nom d'utilisateur"
