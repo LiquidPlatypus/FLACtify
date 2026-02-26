@@ -10,19 +10,31 @@ import { I18nProvider, TransRenderProps } from "@lingui/react";
 import { i18n } from "@lingui/core";
 import { messages as enMessages } from "./src/locales/en/message";
 import { messages as frMessages } from "./src/locales/fr/message";
+import { getLocales } from "react-native-localize";
 
 import HomeScreen from "./src/screens/HomeScreen.tsx";
 import LoginScreen from "./src/screens/LoginScreen.tsx";
 
 const DefaultComponent = (props: TransRenderProps) => {
-	return <Text>{props.children}</Text>
-}
+	return <Text>{props.children}</Text>;
+};
+
+type getLocales = () => Array<{
+	languageCode: string;
+	scriptCode?: string;
+	countryCode: string;
+	languageTag: string;
+	isRTL: boolean;
+}>;
+
+const locales= getLocales()
 
 i18n.load({
 	en: enMessages,
 	fr: frMessages,
 });
-i18n.activate("en");
+const languageCode = locales[0]?.languageCode ?? "en";
+i18n.activate(languageCode);
 
 function App() {
 	const isDarkMode = useColorScheme() === 'dark';
