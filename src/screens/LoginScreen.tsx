@@ -1,7 +1,19 @@
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import { useState } from "react";
+import Keychain from "react-native-keychain";
 
 import { useLingui } from "@lingui/react/macro";
+
+type AuthOk = {
+	ok: true;
+	access_token: string;
+	user: { id: string; email: string; name?: string };
+};
+
+type AuthKo = { ok: false; error: string };
+
+type LoginResponse = AuthOk | AuthKo;
+type RegisterResponse = AuthOk | AuthKo;
 
 export default function LoginScreen() {
 	const { t } = useLingui();
@@ -9,7 +21,7 @@ export default function LoginScreen() {
 	const [isLogin, setIsLogin] = useState(true);
 
 	// Login
-	const [loginUsername, setLoginUsername] = useState("");
+	const [loginEmail, setLoginEmail] = useState("");
 	const [loginPassword, setLoginPassword] = useState("");
 
 	// Register
@@ -17,6 +29,68 @@ export default function LoginScreen() {
 	const [registerEmail, setRegisterEmail] = useState("");
 	const [registerPassword, setRegisterPassword] = useState("");
 	const [registerPasswordConfirm, setRegisterPasswordConfirm] = useState("");
+
+	const handleLogin = async () => {
+		try {
+			const response = await fetch(
+				"http://localhost:3000/api/users/login",
+				{
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						email: loginEmail,
+						password: loginPassword,
+					}),
+				},
+			);
+
+			const data = (await response.json()) as LoginResponse;
+
+			if (!response.ok || !data.ok) {
+				const message = !data.ok ? data.error : "LOGIN_FAILED";
+				throw new Error(message);
+			}
+
+			await Keychain.setGenericPassword(data.user.id, data.access_token);
+		} catch (err: unknown) {
+			const message = err instanceof Error ? err.message : String(err);
+			console.log(message);
+		}
+	};
+
+	const handleRegister = async () => {
+		try {
+			if (registerPassword !== registerPasswordConfirm)
+				throw new Error("PASSWORD_DO_NOT_MATCH");
+
+			const response = await fetch(
+				"http://localhost:3000/api/users/register",
+				{
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						name: registerUsername,
+						email: registerEmail,
+						password: registerPassword,
+					}),
+				},
+			);
+
+			const data = (await response.json()) as RegisterResponse;
+
+			if (!response.ok || !data.ok) {
+				const message = !data.ok ? data.error : "REGISTER_FAILED";
+				throw new Error(message);
+			}
+
+			await Keychain.setGenericPassword(data.user.id, data.access_token);
+
+			setIsLogin(true);
+		} catch (err: unknown) {
+			const message = err instanceof Error ? err.message : String(err);
+			console.log(message);
+		}
+	};
 
 	return (
 		<View style={styles.container}>
@@ -41,9 +115,9 @@ export default function LoginScreen() {
 				<View>
 					<TextInput
 						style={styles.input}
-						placeholder={t`Username`}
-						onChangeText={setLoginUsername}
-						value={loginUsername}
+						placeholder={t`Email`}
+						onChangeText={setLoginEmail}
+						value={loginEmail}
 					/>
 					<TextInput
 						style={styles.input}
@@ -52,7 +126,7 @@ export default function LoginScreen() {
 						value={loginPassword}
 					/>
 
-					<Button title={t`Login`}/>
+					<Button title={t`Login`} onPress={handleLogin} />
 				</View>
 			) : (
 				<View>
@@ -81,23 +155,23 @@ export default function LoginScreen() {
 						value={registerPasswordConfirm}
 					/>
 
-					<Button title={t`Register`}/>
+					<Button title={t`Register`} onPress={handleRegister} />
 				</View>
 			)}
 		</View>
 	);
-};
+}
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
+		justifyContent: "center",
+		alignItems: "center",
 	},
 	title: {
 		fontSize: 20,
 		fontWeight: 600,
-		color: "#FFF"
+		color: "#FFF",
 	},
 	input: {
 		height: 40,
@@ -111,5 +185,5 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		flexDirection: "row",
-	}
-})
+	},
+});
